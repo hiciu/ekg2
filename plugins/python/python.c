@@ -216,6 +216,10 @@ int python_query(script_t *scr, script_query_t *scr_que, void **args)
 				break;
 			}
 			case (QUERY_ARG_CHARPP): {
+				// sometimes this is null, and PyString_FromString does not like nulls.
+				if (!(* (char***) args[i]))
+					break;
+
 				char *tmp = g_strjoinv(" ", (* (char ***) args[i]));
 				w = PyString_FromString(tmp); /* CHECK: xstrdup ? */
 				xfree(tmp);
