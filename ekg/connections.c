@@ -247,6 +247,7 @@ int ekg2_connection_write(connection_data_t *cd, gconstpointer buffer, gsize len
 	gint b_written = 0, count = 0;
 
 	g_return_val_if_fail(cd != NULL, -1);
+	g_return_val_if_fail(G_IS_OUTPUT_STREAM(cd->out_stream), -1);
 	g_return_val_if_fail(length > 0, -1);
 
 	if (cd->use_out_buf)
@@ -574,7 +575,7 @@ static void async_resolvers(connection_data_t *cd, char *query, aresolv_t type) 
 	}
 
 	if (pid > 0) {
-		ekg_child_add(NULL, "async_resolver", pid, NULL, NULL, NULL, NULL);
+		ekg_child_add(NULL, "async_resolver: %d", pid, NULL, NULL, NULL, pid);
 		return;
 	}
 
@@ -629,6 +630,7 @@ static void async_resolvers(connection_data_t *cd, char *query, aresolv_t type) 
 
 	g_strfreev(results);
 
+	sleep(1);
 	exit(0);
 }
 
